@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 hea9549
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +69,7 @@ type KeyValueDBIterator interface {
 	Value() []byte
 }
 
-type KeyValueDB interface{
+type KeyValueDB interface {
 	Open()
 	Close()
 	Get(key []byte) ([]byte, error)

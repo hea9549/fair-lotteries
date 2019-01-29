@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 hea9549
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,10 +19,11 @@ package blockchain
 import (
 	"errors"
 	"fmt"
+	"sync"
+
 	"github.com/hea9549/fair-lotteries/common"
 	"github.com/hea9549/fair-lotteries/common/db"
 	"github.com/hea9549/fair-lotteries/core"
-	"sync"
 )
 
 var ErrPrevSealMismatch = errors.New("PrevSeal value mismatch")

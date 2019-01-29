@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 hea9549
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,19 +17,20 @@
 package db
 
 import (
-	"github.com/syndtr/goleveldb/leveldb"
 	"sync"
+
+	"github.com/syndtr/goleveldb/leveldb"
 )
 
 type DBHandle struct {
-	dbName	string
-	db		*DB
+	dbName string
+	db     *DB
 }
 
 type DBProvider struct {
-	db			*DB
-	mux			sync.Mutex
-	dbHandles	map[string]*DBHandle
+	db        *DB
+	mux       sync.Mutex
+	dbHandles map[string]*DBHandle
 }
 
 func CreateNewDBProvider(levelDbPath string) *DBProvider {

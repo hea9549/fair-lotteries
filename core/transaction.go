@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 hea9549
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,10 @@
 package core
 
 import (
+	"time"
+
 	"github.com/hea9549/fair-lotteries/common"
 	"github.com/hea9549/fair-lotteries/log"
-	"time"
 )
 
 type Transaction struct {
@@ -43,11 +44,9 @@ func (t *Transaction) GetContent() ([]byte, error) {
 func (t *Transaction) CalculateSeal() ([]byte, error) {
 	serializedTx, err := common.Serialize(t)
 	if err != nil {
-		log.Error(nil,"[blockchain] error while serialize transaction")
+		log.Error(nil, "[blockchain] error while serialize transaction")
 		return nil, err
 	}
 
 	return common.CalculateHash(serializedTx), nil
 }
-
-

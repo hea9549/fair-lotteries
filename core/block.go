@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 hea9549
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +18,10 @@ package core
 
 import (
 	"bytes"
+	"time"
+
 	"github.com/hea9549/fair-lotteries/common"
 	"github.com/hea9549/fair-lotteries/log"
-	"time"
 )
 
 type Block struct {
@@ -57,13 +58,12 @@ func (block *Block) IsReadyToPublish() bool {
 
 func (block *Block) IsPrev(serializedPrevBlock []byte) bool {
 	prevBlock := &Block{}
-	err :=common.Deserialize(serializedPrevBlock,prevBlock)
+	err := common.Deserialize(serializedPrevBlock, prevBlock)
 
-	if err != nil{
-		log.Error(nil,"[blockchain] error while check prev. cant' deserialize prev block")
+	if err != nil {
+		log.Error(nil, "[blockchain] error while check prev. cant' deserialize prev block")
 		return false
 	}
 
 	return bytes.Compare(prevBlock.Seal, block.Seal) == 0
 }
-

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 hea9549
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,11 @@ package log
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 	"runtime"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Fields = logrus.Fields
@@ -172,7 +173,6 @@ func EnableStd(enable bool) {
 	}
 }
 
-
 //default file logger is disabled
 func EnableFileLogger(enable bool, savePath string) error {
 	if enable {
@@ -187,8 +187,6 @@ func EnableFileLogger(enable bool, savePath string) error {
 		return nil
 	}
 }
-
-
 
 func initStdLogger(logger *logrus.Logger) {
 	logger.SetOutput(os.Stdout)

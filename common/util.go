@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 hea9549
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,6 @@ func Serialize(object interface{}) ([]byte, error) { //모든 stuct 받기 위�
 	return data, nil
 }
 
-
 func Deserialize(serializedBytes []byte, object interface{}) error {
 	if len(serializedBytes) == 0 {
 		return nil
@@ -41,7 +40,6 @@ func Deserialize(serializedBytes []byte, object interface{}) error {
 	}
 	return err
 }
-
 
 func CalculateHash(b []byte) []byte {
 	hashValue := sha256.New()

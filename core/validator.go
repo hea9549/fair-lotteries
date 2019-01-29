@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 hea9549
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,23 +19,24 @@ package core
 import (
 	"bytes"
 	"errors"
-	"github.com/hea9549/fair-lotteries/common"
-	"github.com/hea9549/fair-lotteries/log"
 	"reflect"
 	"time"
+
+	"github.com/hea9549/fair-lotteries/common"
+	"github.com/hea9549/fair-lotteries/log"
 )
 
 var ErrInsufficientFields = errors.New("previous seal or transaction list seal is not set")
 var ErrEmptyTxList = errors.New("empty TxList")
 
-type Validator struct {}
+type Validator struct{}
 
 func (t *Validator) ValidateBlock(seal []byte, comparisonBlock Block) (bool, error) {
 
 	comparisonSeal, err := t.BuildBlockSeal(comparisonBlock.Timestamp, comparisonBlock.PrevSeal, comparisonBlock.TxSeal)
 
 	if err != nil {
-		log.Error(nil,"[blockchain] error while build seal")
+		log.Error(nil, "[blockchain] error while build seal")
 		return false, err
 	}
 	return bytes.Compare(seal, comparisonSeal) == 0, nil
@@ -107,7 +108,6 @@ func (t *Validator) ValidateTxSeal(txSeal [][]byte, txList []Transaction) (bool,
 	return reflect.DeepEqual(txSeal, tree), nil
 }
 
-
 func convertToLeafNodeList(txList []Transaction) ([][]byte, error) {
 	leafNodeList := make([][]byte, 0)
 
@@ -132,7 +132,6 @@ func isEmpty(txList []Transaction) bool {
 	}
 	return false
 }
-
 
 func (t *Validator) BuildBlockSeal(timeStamp time.Time, prevSeal []byte, txSeal [][]byte) ([]byte, error) {
 	timestamp, err := timeStamp.MarshalText()
@@ -187,7 +186,6 @@ func (t *Validator) BuildTxSeal(txList []Transaction) ([][]byte, error) {
 	return tree, nil
 }
 
-
 func buildTree(nodeList [][]byte, fullNodeList [][]byte) ([][]byte, error) {
 	intermediateNodeList := make([][]byte, 0)
 	for i := 0; i < len(nodeList); i += 2 {
@@ -212,7 +210,6 @@ func buildTree(nodeList [][]byte, fullNodeList [][]byte) ([][]byte, error) {
 
 	return buildTree(intermediateNodeList, newFullNodeList)
 }
-
 
 func calculateIntermediateNodeHash(leftHash []byte, rightHash []byte) []byte {
 	combinedHash := append(leftHash, rightHash...)

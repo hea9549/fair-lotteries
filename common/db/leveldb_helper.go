@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2019 hea9549
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,13 +19,14 @@ package db
 import (
 	"errors"
 	"fmt"
-	"github.com/syndtr/goleveldb/leveldb"
-	"github.com/syndtr/goleveldb/leveldb/util"
 	"io"
 	"os"
 	"path"
 	"strings"
 	"sync"
+
+	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/syndtr/goleveldb/leveldb/util"
 
 	"github.com/syndtr/goleveldb/leveldb/opt"
 )
@@ -51,7 +52,7 @@ type DB struct {
 func CreateNewDB(levelDbPath string) *DB {
 
 	readOpts := &opt.ReadOptions{}
-	writeOptsNoSync := &opt.WriteOptions{false,false}
+	writeOptsNoSync := &opt.WriteOptions{false, false}
 	writeOptsSync := &opt.WriteOptions{}
 	writeOptsSync.Sync = true
 
@@ -65,11 +66,11 @@ func CreateNewDB(levelDbPath string) *DB {
 }
 
 //tested
-func (db *DB) Open(){
+func (db *DB) Open() {
 	db.mux.Lock()
 	defer db.mux.Unlock()
 
-	if db.dbState == opened{
+	if db.dbState == opened {
 		return
 	}
 
@@ -82,7 +83,7 @@ func (db *DB) Open(){
 		panic(fmt.Sprintf("Error while trying to create dir if missing: %s", err))
 	}
 
-	dirEmpty ,err = isdirEmpty(dbPath)
+	dirEmpty, err = isdirEmpty(dbPath)
 
 	dbOpts.ErrorIfMissing = !dirEmpty
 
@@ -92,7 +93,7 @@ func (db *DB) Open(){
 	db.dbState = opened
 }
 
-func (db *DB) Close(){
+func (db *DB) Close() {
 	db.mux.Lock()
 	defer db.mux.Unlock()
 
@@ -115,11 +116,10 @@ func (db *DB) Get(key []byte) ([]byte, error) {
 	}
 
 	if err != nil {
-		return nil, errors.New("Error while trying to retrieve key "+string(key)+":"+err.Error())
+		return nil, errors.New("Error while trying to retrieve key " + string(key) + ":" + err.Error())
 	}
 	return value, nil
 }
-
 
 //sync 옵션은 write buffer를 file io와 항상 동기화 시키는지 여부
 //sync false면 시스템 crash발생시 정보의 손실 가능성이 있다.
@@ -132,11 +132,10 @@ func (db *DB) Put(key []byte, value []byte, sync bool) error {
 
 	err := db.db.Put(key, value, wo)
 	if err != nil {
-		return errors.New("Error while trying to retrieve key "+string(key)+":"+err.Error())
+		return errors.New("Error while trying to retrieve key " + string(key) + ":" + err.Error())
 	}
 	return nil
 }
-
 
 // Delete deletes the given key
 func (db *DB) Delete(key []byte, sync bool) error {
@@ -146,11 +145,10 @@ func (db *DB) Delete(key []byte, sync bool) error {
 	}
 	err := db.db.Delete(key, wo)
 	if err != nil {
-		return errors.New("Error while trying to retrieve key "+string(key)+":"+err.Error())
+		return errors.New("Error while trying to retrieve key " + string(key) + ":" + err.Error())
 	}
 	return nil
 }
-
 
 // WriteBatch writes a batch
 func (db *DB) WriteBatch(KVs map[string][]byte, sync bool) error {
@@ -193,7 +191,7 @@ func (db *DB) Snapshot() (map[string][]byte, error) {
 	snap, err := db.db.GetSnapshot()
 
 	if err != nil {
-		return nil, errors.New("Error while taking snapshot:"+err.Error())
+		return nil, errors.New("Error while taking snapshot:" + err.Error())
 	}
 
 	data := make(map[string][]byte)
@@ -210,7 +208,7 @@ func (db *DB) Snapshot() (map[string][]byte, error) {
 	return data, nil
 }
 
-func createDirIfMissing(dirPath string) (error){
+func createDirIfMissing(dirPath string) error {
 
 	if !strings.HasSuffix(dirPath, "/") {
 		dirPath = dirPath + "/"
