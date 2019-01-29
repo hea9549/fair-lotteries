@@ -39,24 +39,24 @@ const (
 	lastBlockKey  = "last_block"
 )
 
-type BlockRepository struct {
+type Repository struct {
 	DBProvider *db.DBProvider
 	mux        *sync.RWMutex
 	validator  *core.Validator
 }
 
-func NewBlockRepository(dbPath string) (*BlockRepository, error) {
+func NewRepository(dbPath string) (*Repository, error) {
 	validator := new(core.Validator)
 	dbProvider := db.CreateNewDBProvider(dbPath)
 
-	return &BlockRepository{
+	return &Repository{
 		mux:        &sync.RWMutex{},
 		DBProvider: dbProvider,
 		validator:  validator,
 	}, nil
 }
 
-func (y *BlockRepository) AddBlock(block core.Block) error {
+func (y *Repository) AddBlock(block core.Block) error {
 	serializedBlock, err := common.Serialize(block)
 	if err != nil {
 		return err
@@ -106,7 +106,7 @@ func (y *BlockRepository) AddBlock(block core.Block) error {
 	return nil
 }
 
-func (y *BlockRepository) GetBlockByHeight(block core.Block, height uint64) error {
+func (y *Repository) GetBlockByHeight(block core.Block, height uint64) error {
 	blockHeightDB := y.DBProvider.GetDBHandle(blockHeightDB)
 
 	blockSeal, err := blockHeightDB.Get([]byte(fmt.Sprint(height)))
@@ -117,7 +117,7 @@ func (y *BlockRepository) GetBlockByHeight(block core.Block, height uint64) erro
 	return y.GetBlockBySeal(block, blockSeal)
 }
 
-func (y *BlockRepository) GetBlockBySeal(block core.Block, seal []byte) error {
+func (y *Repository) GetBlockBySeal(block core.Block, seal []byte) error {
 	blockSealDB := y.DBProvider.GetDBHandle(blockSealDB)
 
 	serializedBlock, err := blockSealDB.Get(seal)
@@ -130,7 +130,7 @@ func (y *BlockRepository) GetBlockBySeal(block core.Block, seal []byte) error {
 	return err
 }
 
-func (y *BlockRepository) GetBlockByTxID(block core.Block, txID string) error {
+func (y *Repository) GetBlockByTxID(block core.Block, txID string) error {
 	utilDB := y.DBProvider.GetDBHandle(utilDB)
 
 	blockSeal, err := utilDB.Get([]byte(txID))
@@ -142,7 +142,7 @@ func (y *BlockRepository) GetBlockByTxID(block core.Block, txID string) error {
 	return y.GetBlockBySeal(block, blockSeal)
 }
 
-func (y *BlockRepository) GetLastBlock(block core.Block) error {
+func (y *Repository) GetLastBlock(block core.Block) error {
 	utilDB := y.DBProvider.GetDBHandle(utilDB)
 
 	serializedBlock, err := utilDB.Get([]byte(lastBlockKey))
@@ -155,7 +155,7 @@ func (y *BlockRepository) GetLastBlock(block core.Block) error {
 	return err
 }
 
-func (y *BlockRepository) GetTransactionByTxID(transaction core.Transaction, txID string) error {
+func (y *Repository) GetTransactionByTxID(transaction core.Transaction, txID string) error {
 	transactionDB := y.DBProvider.GetDBHandle(transactionDB)
 
 	serializedTX, err := transactionDB.Get([]byte(txID))
@@ -168,7 +168,7 @@ func (y *BlockRepository) GetTransactionByTxID(transaction core.Transaction, txI
 	return err
 }
 
-func (y *BlockRepository) validateBlock(block core.Block) error {
+func (y *Repository) validateBlock(block core.Block) error {
 	if y.validator == nil {
 		return ErrNoValidator
 	}

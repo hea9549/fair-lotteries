@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package blockchain
-
-import (
-	"errors"
-)
+package txpool
 
 type Api struct {
 	repo *Repository
 }
 
 func NewApi(dbPath string) (*Api, error) {
-	repo, err := NewRepository(dbPath)
-
-	if err != nil {
-		return nil, errors.New("error in create block repository")
-	}
+	repo := NewRepository()
 
 	return &Api{
 		repo: repo,
